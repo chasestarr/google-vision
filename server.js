@@ -3,6 +3,7 @@ const express = require("express");
 const multer  = require('multer');
 const crypto = require('crypto');
 const path = require('path');
+const fs = require('fs');
 
 vision.init({auth: 'AIzaSyB34hbutVzDgi6foXkDZ5kIjsQtu1zAthU'});
 
@@ -41,7 +42,11 @@ app.post('/api/photo',function(req,res){
 
         vision.annotate(req).then((result) => {
           // handling response
-          let description = result.responses[0].textAnnotations[0].description;
+          let description = result.responses[0].textAnnotations[0].description.split('\n');
+          fs.writeFile(__dirname + '/results.js', JSON.stringify(result.responses), (err) => {
+            if (err) console.log(err);
+            console.log('file saved');
+          });
           res.json(description);
         }, (e) => {
           console.log('Error: ', e)
