@@ -39,9 +39,10 @@ app.post('/api/photo',function(req,res){
           ]
         });
 
-        vision.annotate(req).then((res) => {
+        vision.annotate(req).then((result) => {
           // handling response
-          console.log(JSON.stringify(res.responses[0].textAnnotations[0].description, null, 1));
+          let description = result.responses[0].textAnnotations[0].description;
+          res.json(description);
         }, (e) => {
           console.log('Error: ', e)
         });
